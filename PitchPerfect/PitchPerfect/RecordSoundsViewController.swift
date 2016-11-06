@@ -2,6 +2,8 @@
 //  RecordSoundViewController.swift
 //  PitchPerfect
 //
+//  Controller class for the recording screen.
+//
 //  Created by Damo de Lemos, Sergio on 10/30/16.
 //  Copyright © 2016 Damo de Lemos, Sergio. All rights reserved.
 //
@@ -11,6 +13,7 @@ import AVFoundation
 
 class RecordSoundViewController: UIViewController, AVAudioRecorderDelegate {
 
+    //UI Elements
     @IBOutlet weak var recordingLabel: UILabel!
     @IBOutlet weak var stopRecordingButton: UIButton!
     @IBOutlet weak var startRecordingButton: UIButton!
@@ -27,6 +30,7 @@ class RecordSoundViewController: UIViewController, AVAudioRecorderDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    //Executed when the start record button is pressed.
     @IBAction func racordAudio(_ sender: Any) {
         recordingLabel.text = "Recording in progress"
         stopRecordingButton.isEnabled = true
@@ -35,6 +39,7 @@ class RecordSoundViewController: UIViewController, AVAudioRecorderDelegate {
         doRecordAudio()
     }
 
+    //Executed when the stop record button is pressed.
     @IBAction func stopRecording(_ sender: Any) {
         recordingLabel.text = "Tap to record"
         stopRecordingButton.isEnabled = false
@@ -56,8 +61,6 @@ class RecordSoundViewController: UIViewController, AVAudioRecorderDelegate {
         let recordingName = "recordedVoid.wav"
         let pathArray = [dirPath, recordingName]
         let filePath = NSURL.fileURL(withPathComponents: pathArray)
-        
-        print(filePath)
         
         let session = AVAudioSession.sharedInstance()
         try! session.setCategory(AVAudioSessionCategoryPlayAndRecord)
@@ -83,6 +86,7 @@ class RecordSoundViewController: UIViewController, AVAudioRecorderDelegate {
         print("Recording finished")
         
         if(flag) {
+            //If everything is OK with saving the audio file, go to the playback screen.
             self.performSegue(withIdentifier: "stopRecording", sender: audioRecorder.url)
         } else {
             print("Saving of recording failed")
@@ -91,6 +95,7 @@ class RecordSoundViewController: UIViewController, AVAudioRecorderDelegate {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "stopRecording" {
+            //Prepare the state of the playback screen
             let playSoundsVC = segue.destination as! PlaySoundsViewController
             let recordedAudioURL = sender as! URL
             playSoundsVC.recordedAudioURL = recordedAudioURL
@@ -98,4 +103,3 @@ class RecordSoundViewController: UIViewController, AVAudioRecorderDelegate {
     }
 
 }
-
