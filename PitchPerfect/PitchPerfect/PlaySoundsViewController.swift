@@ -38,27 +38,18 @@ class PlaySoundsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupAudio()
+        setStackViewLayout()
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         configureUI(PlayingState.notPlaying)
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     //Called when the screen orientation changes
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        switch UIDevice.current.orientation{
-        case .landscapeLeft, .landscapeRight :
-            changeOrientation(vertical: false)
-        case .portrait, .portraitUpsideDown:
-            changeOrientation(vertical: true)
-        default:
-            break
-        }
+        super.viewWillTransition(to: size, with: coordinator)
+        setStackViewLayout()
     }
     
     //Executed when some playback button is pressed.
@@ -87,7 +78,18 @@ class PlaySoundsViewController: UIViewController {
     @IBAction func stopButtonPressed(_ sender: AnyObject) {
         print("Stop Audio Button Pressed")
         stopAudio()
-        configureUI(PlayingState.notPlaying)
+    }
+    
+    //Choose the correct orientation and call changeOrientation to adapt the UI
+    func setStackViewLayout() {
+        switch UIDevice.current.orientation{
+        case .landscapeLeft, .landscapeRight :
+            changeOrientation(vertical: false)
+        case .portrait, .portraitUpsideDown:
+            changeOrientation(vertical: true)
+        default:
+            break
+        }
     }
     
     //Used to adapt the orientation of the screen between landscape and portrait

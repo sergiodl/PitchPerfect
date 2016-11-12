@@ -20,35 +20,20 @@ class RecordSoundViewController: UIViewController, AVAudioRecorderDelegate {
 
     var audioRecorder:AVAudioRecorder!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     //Executed when the start record button is pressed.
     @IBAction func racordAudio(_ sender: Any) {
-        recordingLabel.text = "Recording in progress"
-        stopRecordingButton.isEnabled = true
-        startRecordingButton.isEnabled = false
-        
+        changeUiState(isRecording: true)
         doRecordAudio()
     }
 
     //Executed when the stop record button is pressed.
     @IBAction func stopRecording(_ sender: Any) {
-        recordingLabel.text = "Tap to record"
-        stopRecordingButton.isEnabled = false
-        startRecordingButton.isEnabled = true
-        
+        changeUiState(isRecording: false)
         doStopRecordingAudio()
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         stopRecordingButton.isEnabled = false
     }
     
@@ -87,10 +72,16 @@ class RecordSoundViewController: UIViewController, AVAudioRecorderDelegate {
         
         if(flag) {
             //If everything is OK with saving the audio file, go to the playback screen.
-            self.performSegue(withIdentifier: "stopRecording", sender: audioRecorder.url)
+            performSegue(withIdentifier: "stopRecording", sender: audioRecorder.url)
         } else {
             print("Saving of recording failed")
         }
+    }
+    
+    func changeUiState(isRecording : Bool) {
+        recordingLabel.text = isRecording ? "Recording in progress" : "Tap to record"
+        stopRecordingButton.isEnabled = isRecording
+        startRecordingButton.isEnabled = !isRecording
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
